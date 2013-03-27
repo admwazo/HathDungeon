@@ -303,3 +303,30 @@ void requestInput(string & xmlFile, string mode)
         cin >> xmlFile; // Storage location is at main function
     }
 }
+
+void runParser()
+{
+	vector<ptr> vObjects; 	// This is the object vector to loop thru at output
+	ifstream input;
+	ofstream output;
+	string sInputFilename;	// Declaring filenams for i/o
+	string sOutputFilename;
+
+	// This loop just makes sure that the input is a string, and is a file that
+	// exists
+	do
+	{
+		requestInput(sInputFilename, "INPUT");
+		input.open(sInputFilename.c_str());
+		if (input.fail())
+            cout << "That file doesn't exist, ";
+	}while(input.fail());
+
+	parseXML(vObjects, input);
+
+	outputXMLToConsole(vObjects);
+	
+	requestInput(sOutputFilename, "OUTPUT");
+	output.open(sOutputFilename.c_str());
+	outputXMLToFile(vObjects, output);
+}

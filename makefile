@@ -1,20 +1,20 @@
 #creating object variable
-OBJECTS = Ammunition.o Armor.o Consumable.o Creature.o Entity.o Gold.o Item.o Potion.o Scroll.o Weapon.o XMLSerializable.o main.o
-HEADERS = Ammunition.h Armor.h Consumable.h Creature.h Entity.h Gold.h Item.h Potion.h Scroll.h Weapon.h XMLSerializable.h Parser.h
+OBJECTS = Ammunition.o Armor.o Consumable.o Creature.o DungeonLevel.o Entity.o Gold.o Item.o Potion.o Scroll.o Weapon.o XMLSerializable.o main.o
+HEADERS = Ammunition.h Armor.h Consumable.h Creature.h DungeonLevel.h Entity.h Gold.h Item.h Potion.h Scroll.h Weapon.h XMLSerializable.h Parser.h
 
-all: prog1cons prog1cl
+all: game game-test
 
-prog1cons: $(OBJECTS) main_console.o
-	g++ $^ -o prog1cons
+game: $(OBJECTS) main_console.o
+	g++ $^ -o game
 
-prog1cl: $(OBJECTS) main_cl.o
-	g++ $^ -o prog1cl
+game-test: $(OBJECTS) main_test.o
+	g++ $^ -o game-test
 
 %.o: %.cpp $(HEADERS)
-	g++ -c $< -o $@
-clean:
-	rm -f *.o prog1cons prog1cl 
+	g++ -c $< -o $@ -std=c++0x
 
-test: prog1cl
-	./prog1cl test.xml out2.xml
-	diff -s out2.xml out.xml
+clean:
+	rm -f *.o game game-test
+
+test: game-test
+	./game-test

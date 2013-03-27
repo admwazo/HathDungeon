@@ -4,39 +4,23 @@
 #include <cstdlib>
 #include <ostream>
 #include <cstring>
+#include <vector>
 
 #include "XMLSerializable.h"
 #include "Parser.h"
+#include "DungeonLevel.h"
 
 using namespace std;
 
 typedef XMLSerializable* ptr;
 
+void runParser(); //prototype for runParser since it's defined in main.cpp
+
 int main()
 {
-	vector<ptr> vObjects; 	// This is the object vector to loop thru at output
-	ifstream input;
-	ofstream output;
-	string sInputFilename;	// Declaring filenams for i/o
-	string sOutputFilename;
-
-	// This loop just makes sure that the input is a string, and is a file that
-	// exists
-	do
-	{
-		requestInput(sInputFilename, "INPUT");
-		input.open(sInputFilename.c_str());
-		if (input.fail())
-            cout << "That file doesn't exist, ";
-	}while(input.fail());
-
-	parseXML(vObjects, input);
-
-	outputXMLToConsole(vObjects);
-	
-	requestInput(sOutputFilename, "OUTPUT");
-	output.open(sOutputFilename.c_str());
-	outputXMLToFile(vObjects, output);
-
-	return 0;
+	runParser(); //runs the xml-parser
+	DungeonLevel dl(79,20); //builds dungeonLevel
+    dl.BuildRooms(); //builds dungeonLevelrooms
+	dl.Display(); //displays dungeonlevel
+    return 0;
 }
