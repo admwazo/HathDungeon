@@ -1,6 +1,6 @@
 #creating object variable
-OBJECTS = Ammunition.o Armor.o Consumable.o Creature.o DungeonLevel.o Entity.o Gold.o Item.o Potion.o Scroll.o Weapon.o XMLSerializable.o main.o
-HEADERS = Ammunition.h Armor.h Consumable.h Creature.h DungeonLevel.h Entity.h Gold.h Item.h Potion.h Scroll.h Weapon.h XMLSerializable.h Parser.h
+OBJECTS = Ammunition.o Armor.o Consumable.o Creature.o DungeonLevel.o Entity.o Gold.o Item.o Player.o Potion.o Scroll.o Weapon.o XMLSerializable.o main.o
+HEADERS = Ammunition.h Armor.h Consumable.h Creature.h DungeonLevel.h Entity.h Gold.h Item.h Player.h Potion.h Scroll.h Weapon.h XMLSerializable.h Parser.h
 
 all: game game-test
 

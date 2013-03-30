@@ -22,5 +22,4 @@ int main()
 	DungeonLevel dl(79,20); //builds dungeonLevel
     dl.BuildRooms(); //builds dungeonLevelrooms
 	dl.Display(); //displays dungeonlevel
-    return 0;
 }

@@ -3,7 +3,6 @@
 #include <ostream>
 #include <cstdlib>
 
-
 #include "XMLSerializable.h"
 
 using namespace std;

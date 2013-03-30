@@ -5,6 +5,10 @@
 #include <map>
 
 #include "DungeonLevel.h"
+#include "XMLSerializable.h"
+#include "Player.h"
+#include "Creature.h"
+#include "Entity.h"
 
 using namespace std;
 
@@ -394,6 +398,9 @@ void DungeonLevel::SpawnElements()
 	//spawning downstairs
 	RandomPos(iCol, iRow, vSectors[vSectors.size()-1]);
 	vvTiles[iRow][iCol] = cDownTile;
+	//spawning player
+	RandomPos(iCol, iRow, vSectors[0]);
+	Player pPlayer(iCol, iRow);
 }
 
 //receives a column and a row integer by reference and a dlSector

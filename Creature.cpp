@@ -19,6 +19,26 @@ Creature::~Creature()
 
 }
 
+int Creature::getPosX()
+{
+	return iPosX;
+}
+
+void Creature::setPosX(int x)
+{
+	iPosX = x;
+}
+
+int Creature::getPosY()
+{
+	return iPosY;
+}
+
+void Creature::setPosY(int y)
+{
+	iPosY = y;
+}
+
 int Creature::getLevel()
 {
 	return level;
@@ -47,6 +67,26 @@ int Creature::getMaxHP()
 void Creature::setMaxHP(int iMaxHP)
 {
 	maxHP = iMaxHP;
+}
+
+void Creature::moveLeft()
+{
+	iPosX--;
+}
+
+void Creature::moveRight()
+{
+	iPosX++;
+}
+
+void Creature::moveUp()
+{
+	iPosY++;
+}
+
+void Creature::moveDown()
+{
+	iPosY--;
 }
 
 /*

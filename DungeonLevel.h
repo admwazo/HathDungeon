@@ -5,7 +5,6 @@
 #include <vector>
 #include <random>
 #include <ctime>
-#include <map>
 
 class DungeonLevel
 {
@@ -51,6 +50,7 @@ class DungeonLevel
 		virtual int GetEndColumn();
 		virtual int GetStartColumn();
         virtual std::vector<DungeonLevel*> GetVSectors();
+		//virtual void Play();
 };
 
 #endif

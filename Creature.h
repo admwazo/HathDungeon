@@ -20,6 +20,14 @@ public:
 	virtual void setHP(int iHP);
 	virtual int getMaxHP();
 	virtual void setMaxHP(int iMaxHP);
+	virtual void moveLeft();
+    virtual void moveRight();
+    virtual void moveDown();
+    virtual void moveUp();
+	virtual int getPosX();
+	virtual void setPosX(int x);
+	virtual int getPosY();
+	virtual void setPosY(int y);
 	//virtual void setInventory(std::vector<Item*> inventory);
 	//virtual std::vector<Item*> getInventory();
 	
@@ -35,6 +43,8 @@ private:
 	int HP;
 	int maxHP;
 	std::vector<Item*> inventory;
+	int iPosX;
+	int iPosY;
 };
 
 // End of the include guard:
