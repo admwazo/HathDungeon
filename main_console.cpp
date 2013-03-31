@@ -9,6 +9,7 @@
 #include "XMLSerializable.h"
 #include "Parser.h"
 #include "DungeonLevel.h"
+#include "Game.h"
 
 using namespace std;
 
@@ -18,8 +19,8 @@ void runParser(); //prototype for runParser since it's defined in main.cpp
 
 int main()
 {
-	runParser(); //runs the xml-parser
-	DungeonLevel dl(79,20); //builds dungeonLevel
-    dl.BuildRooms(); //builds dungeonLevelrooms
-	dl.Display(); //displays dungeonlevel
+	//runParser(); //runs the xml-parser
+	Game g;
+	cout << "game was created" << endl;
+	g.Play();
 }

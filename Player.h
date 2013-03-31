@@ -9,7 +9,7 @@ class Player : public Creature
 		int XP;
 		
 	public:
-		Player(int x, int y);
+		Player();
 		~Player();
 };
 

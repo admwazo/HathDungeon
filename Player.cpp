@@ -7,8 +7,7 @@ Player::~Player()
 
 }
 
-Player::Player(int x, int y)
+Player::Player()
 {
-	setPosX(x);
-	setPosY(y);
+	setDisplayChar('@');
 }

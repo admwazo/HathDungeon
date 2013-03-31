@@ -20,22 +20,8 @@ using namespace std;
 
 typedef XMLSerializable* ptr; 
 
-// parseElement:
-//  returns a bool indicating success; false if invalid XML
-//  was encountered, true if the XML was parsed correctly
-//
-// arguments:
-//   istream & input - an input stream of the XML file
-//     being processed
-//
-//   string sHierarchy - the current position in the XML
-//     document's object hierarchy which is being processed
-//
-// note: this does *not* properly check for end of input
-// in the XML document!
-//
-// This function assumes that we are on the first character
-// AFTER the opening <.
+//takes an istream by reference and a string to hold the current position in XML doc's object hierarchy
+//assumes we are on the first char after the opening <. does not properly check for end of input
 bool parseElement(istream & input, vector<ptr> & vObjects, ptr xmlsClass)
 {	
 	// char to hold data as we process it
@@ -43,7 +29,6 @@ bool parseElement(istream & input, vector<ptr> & vObjects, ptr xmlsClass)
 
 	// The name of the element; initialized to
 	// an empty string (as all strings are by default);
-	// we get this by reading in the XML
 	string sElementName;
 
 

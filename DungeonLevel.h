@@ -16,7 +16,11 @@ class DungeonLevel
     	int iStartColumn;
     	int iEndColumn;
     	int iNumTiles;
-    	//requirements
+    	int iDownStairsX;
+		int iDownStairsY;
+		int iUpStairsX;
+		int iUpStairsY;	
+		//requirements
     	int iMinLength;	//minimum length of room (including wall tiles and invisible boundary) - set at 9
     	int iMinTiles;	//minimum number of tiles - set at 400
     	int iMinRooms; //minimum number of rooms - set at 5
@@ -49,8 +53,9 @@ class DungeonLevel
 		virtual int GetStartRow();
 		virtual int GetEndColumn();
 		virtual int GetStartColumn();
+		virtual void GetUpStairs(int & iRow, int & iCol);
+		virtual void GetDownStairs(int & iRow, int & iCol);
         virtual std::vector<DungeonLevel*> GetVSectors();
-		//virtual void Play();
 };
 
 #endif

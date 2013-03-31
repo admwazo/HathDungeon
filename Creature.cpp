@@ -68,7 +68,7 @@ void Creature::setMaxHP(int iMaxHP)
 {
 	maxHP = iMaxHP;
 }
-
+/*
 void Creature::moveLeft()
 {
 	iPosX--;
@@ -81,13 +81,14 @@ void Creature::moveRight()
 
 void Creature::moveUp()
 {
-	iPosY++;
+	iPosY--;
 }
 
 void Creature::moveDown()
 {
-	iPosY--;
+	iPosY++;
 }
+*/
 
 /*
 void setInventory(vector<Item*> inventory)

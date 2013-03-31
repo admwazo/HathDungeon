@@ -2,7 +2,6 @@
 #include <vector>
 #include <random>
 #include <ctime>
-#include <map>
 
 #include "DungeonLevel.h"
 #include "XMLSerializable.h"
@@ -394,13 +393,14 @@ void DungeonLevel::SpawnElements()
 	int iRow;
 	//spawning upstairs
 	RandomPos(iCol, iRow, vSectors[0]);
-	vvTiles[iRow][iCol] = cUpTile;
+	iDownStairsX = iCol;
+	iDownStairsY = iRow;
+	vvTiles[iRow][iCol] = cDownTile;
 	//spawning downstairs
 	RandomPos(iCol, iRow, vSectors[vSectors.size()-1]);
-	vvTiles[iRow][iCol] = cDownTile;
-	//spawning player
-	RandomPos(iCol, iRow, vSectors[0]);
-	Player pPlayer(iCol, iRow);
+	iUpStairsX = iCol;
+	iUpStairsY = iRow;
+	vvTiles[iRow][iCol] = cUpTile;
 }
 
 //receives a column and a row integer by reference and a dlSector
@@ -503,6 +503,18 @@ int DungeonLevel::GetEndRow()
 int DungeonLevel::GetEndColumn()
 {
 	return(iEndColumn);
+}
+
+void DungeonLevel::GetUpStairs(int & iRow, int & iCol)
+{
+	iCol = iUpStairsX;
+	iRow = iUpStairsY;
+}
+
+void DungeonLevel::GetDownStairs(int & iRow, int & iCol)
+{
+	iCol = iDownStairsX;
+	iRow = iDownStairsY;
 }
 
 // Dump the dungeon level to console

@@ -20,10 +20,10 @@ public:
 	virtual void setHP(int iHP);
 	virtual int getMaxHP();
 	virtual void setMaxHP(int iMaxHP);
-	virtual void moveLeft();
-    virtual void moveRight();
-    virtual void moveDown();
-    virtual void moveUp();
+	//virtual void moveLeft();
+    //virtual void moveRight();
+    //virtual void moveDown();
+    //virtual void moveUp();
 	virtual int getPosX();
 	virtual void setPosX(int x);
 	virtual int getPosY();
