@@ -21,6 +21,5 @@ int main()
 {
 	//runParser(); //runs the xml-parser
 	Game g;
-	cout << "game was created" << endl;
 	g.Play();
 }
