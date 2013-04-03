@@ -13,13 +13,9 @@ Game::Game()
 	iCurLevel = 0;
 	int iCol;
     int iRow;
-
-	UpLevel();
-    //spawning player
 	cPlayer = p_Player.getDisplayChar();
-    dlLevel->GetDownStairs(iRow, iCol);
-	p_Player.setPosX(iCol);
-	p_Player.setPosY(iRow);
+	
+	UpLevel();
 }
 
 Game::~Game()
@@ -35,13 +31,13 @@ bool Game::Turn()
 	if(input == 'q')
 		return false;
 	else if(input == 'w')
-		MoveUp(&p_Player);
+		Move("up", &p_Player);
 	else if(input == 's')
-		MoveDown(&p_Player);
+		Move("down", &p_Player);
 	else if(input == 'a')
-		MoveLeft(&p_Player);
+		Move("left", &p_Player);
 	else if(input == 'd')
-		MoveRight(&p_Player);
+		Move("right", &p_Player);
 	else if(input == 'h');
 		//help sequence
 	else if(input == 'p');
@@ -69,69 +65,68 @@ bool Game::Play()
 	return false;
 }
 
-void Game::MoveLeft(Creature* c_Actor)
+void Game::Move(string sDirection, Creature* c_Actor)
 {
-	int iPosY = c_Actor->getPosY();
-	int iPosX = c_Actor->getPosX();
-	char cTemp2 = dlLevel->Get(iPosY, iPosX-1);
-	
-	if((cTemp2 != '|')&&(cTemp2 != ' ')) //if forward tile is not a wall
+	int iPosY, iPosX, iToPosY, iToPosX;	
+
+	iPosY = c_Actor->getPosY();
+	iPosX = c_Actor->getPosX();
+	if(sDirection == "left")
 	{
-		dlLevel->Set(iPosY, iPosX, cTemp); //setting the dungeon tile to backward tile
-		cTemp = cTemp2; //holding the current tile
-		c_Actor->setPosX(iPosX-1); //setting updated pos of actor
-		dlLevel->Set(iPosY, iPosX-1, cPlayer); //actually moving the player
+		iToPosX = iPosX-1;
+		iToPosY = iPosY;
 	}
-}
-
-void Game::MoveRight(Creature* c_Actor)
-{
-    int iPosY = c_Actor->getPosY();
-    int iPosX = c_Actor->getPosX();
-    char cTemp2 = dlLevel->Get(iPosY, iPosX+1);
-
-    if((cTemp2 != '|')&&(cTemp2 != ' ')) //if forward tile is not a wall
+	else if(sDirection == "right")
 	{
-        dlLevel->Set(iPosY, iPosX, cTemp); //setting the dungeon tile to backward tile
+		iToPosX = iPosX+1;
+		iToPosY = iPosY;
+	}
+	else if(sDirection == "up")
+	{
+		iToPosY = iPosY-1;
+		iToPosX = iPosX;
+	}
+	else if(sDirection == "down")
+	{
+		iToPosY = iPosY+1;
+		iToPosX = iPosX;
+	}
+	else
+	{
+		cout << "Wrong parameter, should be: up/down/left/right" << endl;
+	}
+	
+	char cTemp2 = dlLevel->Get(iToPosY, iToPosX);
+
+	if(cTemp2 == '<')	//if we hit an upstairs tile
+	{
+		dlLevel->Set(iPosY, iPosX, cTemp); //reset current tile
+		cTemp = '>';	//hold a downstairs tile for next turn, because we will be standing on one
+		UpLevel();	//go up a level
+	}
+
+	else if(cTemp2 == '>')
+	{
+		dlLevel->Set(iPosY, iPosX, cTemp); //reset current tile
+		cTemp = '<';	//hold an upstairs tile
+		DownLevel();	//go down a level
+	}	
+
+	else if((cTemp2 != '|')&&(cTemp2 != ' ')&&(cTemp2 != '-'))
+	{
+		dlLevel->Set(iPosY, iPosX, cTemp);
 		cTemp = cTemp2;
-        c_Actor->setPosX(iPosX+1); //setting updated pos of actor
-        dlLevel->Set(iPosY, iPosX+1, cPlayer); //actually moving the player
-    }
-}
-
-void Game::MoveUp(Creature* c_Actor)
-{
-    int iPosY = c_Actor->getPosY();
-    int iPosX = c_Actor->getPosX();
-    char cTemp2 = dlLevel->Get(iPosY-1, iPosX);
-
-    if((cTemp2 != '-')&&(cTemp2 != ' ')) //if forward tile is not a wall
-    {
-        dlLevel->Set(iPosY, iPosX, cTemp); //setting the dungeon tile to backward tile
-        cTemp = cTemp2;
-		c_Actor->setPosY(iPosY-1); //setting updated pos of actor
-        dlLevel->Set(iPosY-1, iPosX, cPlayer); //actually moving the player
-    }
-}
-
-void Game::MoveDown(Creature* c_Actor)
-{
-    int iPosY = c_Actor->getPosY();
-    int iPosX = c_Actor->getPosX();
-    char cTemp2 = dlLevel->Get(iPosY+1, iPosX);
-
-    if((cTemp2 != '-')&&(cTemp2 != ' ')) //if forward tile is not a wall
-    {
-        dlLevel->Set(iPosY, iPosX, cTemp); //setting the dungeon tile to backward tile
-        cTemp = cTemp2;
-		c_Actor->setPosY(iPosY+1); //setting updated pos of actor
-        dlLevel->Set(iPosY+1, iPosX, cPlayer); //actually moving the player
-    }
+		c_Actor->setPosX(iToPosX);
+		c_Actor->setPosY(iToPosY);
+		dlLevel->Set(iToPosY, iToPosX, cPlayer);
+	}
 }
 
 //Cycles thru vector of DL objects, and returns one higher than what iCurLevel is set to
 void Game::UpLevel()
 {
+	int iCol, iRow;
+	
 	//if we are playing currently highest level
 	if(vLevels.size() == iCurLevel)
 	{
@@ -142,14 +137,29 @@ void Game::UpLevel()
 	//else, a level higher than current one already exists
 	else
 	{
-		dlLevel = vLevels[iCurLevel+1];
+		dlLevel = vLevels[iCurLevel];
 	}
 
 	iCurLevel++; //incrementing current level counter
+
+	dlLevel->GetDownStairs(iRow, iCol);		//get position of next levels downstairs
+	p_Player.setPosX(iCol);		//set players x pos
+	p_Player.setPosY(iRow);		//set players y pos
+	
+	dlLevel->Set(iRow, iCol, cPlayer);	//set dungeon tile to display Player
 }
 
 void Game::DownLevel()
 {
-	iCurLevel--;
-	dlLevel = vLevels[iCurLevel];
+	int iCol, iRow;
+	cout << "going down a level from iCurLevel: " << iCurLevel << endl;
+	iCurLevel--;	//decrement current level counter
+	cout << "now current level is: " << iCurLevel << endl;
+	dlLevel = vLevels[iCurLevel-1];	//accessing level in index
+
+	dlLevel->GetUpStairs(iRow, iCol);	//get position of lower level's upstairs
+	p_Player.setPosX(iCol);		//set players x pos
+	p_Player.setPosY(iRow);		//set players y pos
+
+	dlLevel->Set(iRow, iCol, cPlayer);	//set dungeon til to display Player
 }

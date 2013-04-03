@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 
 #include "Player.h"
 #include "Creature.h"
@@ -27,10 +28,7 @@ class Game
 		virtual void UpLevel();
 		virtual void DownLevel();
 		virtual bool Turn();
-		virtual void MoveLeft(Creature* c_Actor);
-		virtual void MoveRight(Creature* c_Actor);
-		virtual void MoveDown(Creature* c_Actor);
-		virtual void MoveUp(Creature* c_Actor); 
+		virtual void Move(std::string sDirection, Creature* c_Actor); 
 };
 
 #endif
