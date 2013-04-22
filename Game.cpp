@@ -243,6 +243,7 @@ void Game::Pickup()
 	vector<string> vsInventory = t_CurTile->GetInventory();
 	if(vsInventory.size() > 0)
 	{
+		//displaying inventory of tile
 		stringstream ss;
 		ss << "Which item would you like to pick up?  (q) to quit ";
 		for(int i = 0; i < vsInventory.size(); i++)
@@ -250,8 +251,9 @@ void Game::Pickup()
 				ss << "(" << i << ") " << vsInventory[i] << " ";
 			}
 		Display(ss.str()); //sending the tile inventory to display to show
-			
 		int x = getch();
+		
+		//making sure players inventory not full
 		if(p_Player->GetItem(4) != NULL)
 		{
 			stringstream ssInventoryFull;
@@ -260,18 +262,22 @@ void Game::Pickup()
 			getch();
 			return;
 		}
-	
+		//because of ncurses getch returns integers as ascii
 		int y = (x - 48);
+		//if player chose quit
 		if(x == 'q')
 			return;
+		//getting item
 		Item* i_Item = t_CurTile->GetItem(y);
 		if(i_Item != NULL)
 		{
+			//casting as weapon
 			Weapon* w_Temp = dynamic_cast<Weapon*>(i_Item);
-			if(w_Temp)
+			if(w_Temp != NULL)
 			{
 				p_Player->Drop(p_Player->GetWeapon());
 			}
+			//adding the item either way, because it's valid
             p_Player->AddItem(i_Item);  //giving the player the item pointer
 		}
 		else
