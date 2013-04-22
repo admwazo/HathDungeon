@@ -8,6 +8,9 @@
 #include "Player.h"
 #include "Creature.h"
 #include "Entity.h"
+#include "Tile.h"
+#include "Factory.h"
+#include "Item.h"
 
 using namespace std;
 
@@ -41,18 +44,23 @@ DungeonLevel::DungeonLevel(int iWidth, int iHeight)
 	cTunnelTile = '#'; 
 	cUpTile = '<';
 	cDownTile = '>';   
+    t_UpStairs = NULL; //so that spawnelements knows if the level is built
 
     vvTiles.resize(iHeight);
 
     // And then resize the inner vectors.
     for(auto it = vvTiles.begin(); it != vvTiles.end(); it++ )
     {
-        (*it).resize(iWidth, cVacantTile);
+        (*it).resize(iWidth);
     }
+
+	for(int y = iStartRow; y <= iEndRow; y++)
+		for(int x = iStartColumn; x <= iEndColumn; x++)
+			vvTiles[y][x] = new Tile(x, y);
 }
 
 //Creates all rooms in DungeonLevel
-void DungeonLevel::BuildRooms()
+void DungeonLevel::BuildRooms() 
 {
     int iRandY; //holds random number value for follwing calculations
     int iRandX; //holds random number value for follwing calculations
@@ -132,7 +140,7 @@ bool DungeonLevel::SpawnSector(DungeonLevel* dlSector)
         itCol <= (dlSector->iEndColumn);
         itCol++)
         {	//if tile is not vacant, return false
-            if(vvTiles[itRow][itCol] != cVacantTile)
+            if(vvTiles[itRow][itCol]->Get() != cVacantTile)
                 return false;
         }
     }
@@ -157,13 +165,13 @@ bool DungeonLevel::SpawnSector(DungeonLevel* dlSector)
         	itCol <= (dlSector->iEndColumn);
         	itCol++)
         {
-           	vvTiles[itRow][itCol] = cRoomTile; //first drawing room tile 
+           	vvTiles[itRow][itCol]->Set(cRoomTile); //first drawing room tile 
     
             //overwriting room tile if it's a wall
             if((itRow == (dlSector->iStartRow))||(itRow == (dlSector->iEndRow)))    
-               	vvTiles[itRow][itCol] = cHoriWallTile;
+               	vvTiles[itRow][itCol]->Set(cHoriWallTile);
             if((itCol == (dlSector->iStartColumn))||(itCol == (dlSector->iEndColumn)))
-                vvTiles[itRow][itCol] = cVertiWallTile;
+                vvTiles[itRow][itCol]->Set(cVertiWallTile);
 			//Display(); //i just think adding this looks cool
         }
     }
@@ -186,7 +194,7 @@ void DungeonLevel::SortSectors()
 		for(int itRow = iStartRow; itRow <= iEndRow; itRow++)
 		{	
 			//if you see a non-vacant Tile
-			if(vvTiles[itRow][itCol] != cVacantTile)
+			if(vvTiles[itRow][itCol]->Get() != cVacantTile)
 			{
 				//if we cant find the tile in our SortedSects vector
 				if(FindSector(itRow, itCol, vSortedSects) < 0)
@@ -242,23 +250,23 @@ void DungeonLevel::DrawTunnels()
             for(int x = iMidX; x <= iTargMidX; x++)
             {
 				//if it's not a room tile
-                if(vvTiles[iMidY][x] != cRoomTile)
+                if(vvTiles[iMidY][x]->Get() != cRoomTile)
 				{
 					//if we are at a corner
-					if((vvTiles[iMidY][x] == cVertiWallTile)&&
-						(vvTiles[iMidY][x+1] == cHoriWallTile))
+					if((vvTiles[iMidY][x]->Get() == cVertiWallTile)&&
+						(vvTiles[iMidY][x+1]->Get() == cHoriWallTile))
 					{
 						//moving the row up 1 -- doesn't matter if we move up or down
 						//will effectively avoid mass horizontal wall tunnelling
 						iMidY++;
-						vvTiles[iMidY][x-1] = cTunnelTile; 
+						vvTiles[iMidY][x-1]->Set(cTunnelTile); 
 					}
 		
 					//if we are on the last room column
 					if(x == iTargMidX)
 					{
 						//if we are on a vertical wall
-						if(vvTiles[iMidY][x] == cVertiWallTile)
+						if(vvTiles[iMidY][x]->Get() == cVertiWallTile)
 						{
 							//"cleaning" the coordinate by moving back a column
 							//so i don't have to write an extra condition in vertical tunnelling
@@ -271,7 +279,7 @@ void DungeonLevel::DrawTunnels()
  						xClean = x;					
 					}
 					//setting tunnel tile
-					vvTiles[iMidY][xClean] = cTunnelTile;
+					vvTiles[iMidY][xClean]->Set(cTunnelTile);
 				}
             }
 
@@ -282,10 +290,10 @@ void DungeonLevel::DrawTunnels()
 				for(int y = iMidY; y <= iTargMidY; y++)
 				{
 					//if it's not a room tile
-					if(vvTiles[y][iTargMidX] != cRoomTile)
+					if(vvTiles[y][iTargMidX]->Get() != cRoomTile)
 					{
 						//if we are on a vertical room wall
-						if(vvTiles[y][iTargMidX] == cVertiWallTile)
+						if(vvTiles[y][iTargMidX]->Get() == cVertiWallTile)
 						{
 							iTargMidX--; //moving back one
 							iMoveCount++; //incrementing moveCount
@@ -296,23 +304,23 @@ void DungeonLevel::DrawTunnels()
 						{
 							//if we are at a corner, wrap back around so we try
 							//not to hit any more wall tiles on upper rooms
-							if((vvTiles[y-1][iTargMidX+1] == cVertiWallTile)&&
-								(vvTiles[y-1][iTargMidX+2] == cHoriWallTile))
+							if((vvTiles[y-1][iTargMidX+1]->Get() == cVertiWallTile)&&
+								(vvTiles[y-1][iTargMidX+2]->Get() == cHoriWallTile))
 							{
-								vvTiles[y][iTargMidX] = cTunnelTile; //cornering
+								vvTiles[y][iTargMidX]->Set(cTunnelTile); //cornering
 								iTargMidX++;
 								iMoveCount--;
 							}
 							//if we are at the end and still hugging the wall
 							else if(y == iTargMidY)
 							{
-								vvTiles[y][iTargMidX] = cTunnelTile; //cornering
+								vvTiles[y][iTargMidX]->Set(cTunnelTile); //cornering
 								iTargMidX++;
 								iMoveCount--;
 							}
 						}
 						//setting a tunnel tile
-						vvTiles[y][iTargMidX] = cTunnelTile;
+						vvTiles[y][iTargMidX]->Set(cTunnelTile);
 					}
 				}
 			}
@@ -323,10 +331,10 @@ void DungeonLevel::DrawTunnels()
 				for(int y = iMidY; y >= iTargMidY; y--)
 				{
                     //if it's not a room tile
-                    if(vvTiles[y][iTargMidX] != cRoomTile)
+                    if(vvTiles[y][iTargMidX]->Get() != cRoomTile)
                     {
                         //if we are on a vertical room wall
-                        if(vvTiles[y][iTargMidX] == cVertiWallTile)
+                        if(vvTiles[y][iTargMidX]->Get() == cVertiWallTile)
                         {
                             iTargMidX--; //moving back one
                             iMoveCount++; //incrementing moveCount
@@ -337,23 +345,23 @@ void DungeonLevel::DrawTunnels()
                         {
                             //if we are at a corner, wrap back around so we try
                             //not to hit any more wall tiles on upper rooms
-                            if((vvTiles[y+1][iTargMidX+1] == cVertiWallTile)&&
-                                (vvTiles[y+1][iTargMidX+2] == cHoriWallTile))
+                            if((vvTiles[y+1][iTargMidX+1]->Get() == cVertiWallTile)&&
+                                (vvTiles[y+1][iTargMidX+2]->Get() == cHoriWallTile))
                             {
-                                vvTiles[y][iTargMidX] = cTunnelTile; //cornering
+                                vvTiles[y][iTargMidX]->Set(cTunnelTile); //cornering
                                 iTargMidX++; 
                                 iMoveCount--;
                             }
                             //if we are at the end and still hugging the wall
                             else if(y == iTargMidY)
                             {
-                                vvTiles[y][iTargMidX] = cTunnelTile; //creating corner
+                                vvTiles[y][iTargMidX]->Set(cTunnelTile); //creating corner
                                 iTargMidX++; //moving forward into room
                                 iMoveCount--;
                             }
                         }
 						//setting a tunnel tile
-						vvTiles[y][iTargMidX] = cTunnelTile;
+						vvTiles[y][iTargMidX]->Set(cTunnelTile);
 					}
 				}
 			}
@@ -366,10 +374,10 @@ void DungeonLevel::DrawTunnels()
 			y <= (vSectors[itSec]->iEndRow);
 			 y++)
 		{
-			if(vvTiles[y][(vSectors[itSec]->iStartColumn)] == cTunnelTile)
-				vvTiles[y][(vSectors[itSec]->iStartColumn)] = cRoomTile;
-			if(vvTiles[y][(vSectors[itSec]->iEndColumn)] == cTunnelTile)
-				vvTiles[y][(vSectors[itSec]->iEndColumn)] = cRoomTile;
+			if(vvTiles[y][(vSectors[itSec]->iStartColumn)]->Get() == cTunnelTile)
+				vvTiles[y][(vSectors[itSec]->iStartColumn)]->Set(cRoomTile);
+			if(vvTiles[y][(vSectors[itSec]->iEndColumn)]->Get() == cTunnelTile)
+				vvTiles[y][(vSectors[itSec]->iEndColumn)]->Set(cRoomTile);
 		}
 
 //		//loop to overwrite holes tunneled into top/bottom walls with room tiles
@@ -377,10 +385,10 @@ void DungeonLevel::DrawTunnels()
 			x <= (vSectors[itSec]->iEndColumn);
 			x++)
 		{
-			if(vvTiles[(vSectors[itSec]->iStartRow)][x] == cTunnelTile)
-				vvTiles[(vSectors[itSec]->iStartRow)][x] = cRoomTile;
-			if(vvTiles[vSectors[itSec]->iEndRow][x] == cTunnelTile)
-				vvTiles[vSectors[itSec]->iEndRow][x] = cRoomTile;
+			if(vvTiles[(vSectors[itSec]->iStartRow)][x]->Get() == cTunnelTile)
+				vvTiles[(vSectors[itSec]->iStartRow)][x]->Set(cRoomTile);
+			if(vvTiles[vSectors[itSec]->iEndRow][x]->Get() == cTunnelTile)
+				vvTiles[vSectors[itSec]->iEndRow][x]->Set(cRoomTile);
 		}
 	}
 }
@@ -391,16 +399,72 @@ void DungeonLevel::SpawnElements()
 {
 	int iCol;
 	int iRow;
+	
+	//if spawnelements is being called on an existing dungeonlevel, just spawn one creature
+	if(GetUpStairs() != NULL)
+	{
+        do{
+            RandomPos(iCol, iRow, this);
+        }while(!(vvTiles[iRow][iCol]->IsGoodE()));
+        Creature* c_Creature = Factory::Instance().GenerateCreature(10);
+
+        if(c_Creature)
+        {
+            vCreatures.push_back(c_Creature);
+            c_Creature->SetTile(vvTiles[iRow][iCol]);
+        }
+		
+		return;
+	}
+	else;
+	
 	//spawning upstairs
-	RandomPos(iCol, iRow, vSectors[0]);
-	iDownStairsX = iCol;
-	iDownStairsY = iRow;
-	vvTiles[iRow][iCol] = cDownTile;
+	do		//do loop just ensures that spawned stairways do not block a tunnel entrance
+	{
+		RandomPos(iCol, iRow, vSectors[0]);
+	}while(!(vvTiles[iRow+1][iCol+1]->IsGoodE())||
+			!(vvTiles[iRow-1][iCol+1]->IsGoodE())||
+			!(vvTiles[iRow-1][iCol-1]->IsGoodE())||
+			!(vvTiles[iRow+1][iCol-1]->IsGoodE()));
+	t_UpStairs = vvTiles[iRow][iCol];
+	vvTiles[iRow][iCol]->Set(cUpTile);
 	//spawning downstairs
-	RandomPos(iCol, iRow, vSectors[vSectors.size()-1]);
-	iUpStairsX = iCol;
-	iUpStairsY = iRow;
-	vvTiles[iRow][iCol] = cUpTile;
+	do
+	{
+		RandomPos(iCol, iRow, vSectors[vSectors.size()-1]);
+    }while(!(vvTiles[iRow+1][iCol+1]->IsGoodE())||
+            !(vvTiles[iRow-1][iCol+1]->IsGoodE())||
+            !(vvTiles[iRow-1][iCol-1]->IsGoodE())||
+            !(vvTiles[iRow+1][iCol-1]->IsGoodE()));
+	t_DownStairs = vvTiles[iRow][iCol];
+	vvTiles[iRow][iCol]->Set(cDownTile);
+	//spawning items
+	for(int i = 0; i < (20 + mt() % 5); i ++)
+	{	
+		do{
+			RandomPos(iCol, iRow, this);
+		}while(!(vvTiles[iRow][iCol]->IsGoodE()));
+		Item* i_Item = Factory::Instance().GenerateItem();
+		
+		if(i_Item)
+		{
+			vvTiles[iRow][iCol]->AddItem(i_Item);
+		}	
+	}
+	//spawning monsters
+	for(int i = 0; i < (4 + mt() % 5); i++)
+	{
+		do{
+			RandomPos(iCol, iRow, this);
+		}while(!(vvTiles[iRow][iCol]->IsGoodE()));
+		Creature* c_Creature = Factory::Instance().GenerateCreature(10);
+		
+		if(c_Creature)
+		{
+			vCreatures.push_back(c_Creature);
+			c_Creature->SetTile(vvTiles[iRow][iCol]);
+		}
+	}
 }
 
 //receives a column and a row integer by reference and a dlSector
@@ -472,12 +536,12 @@ int DungeonLevel::GetWidth(int iRow)
 
 char DungeonLevel::Get(int iRow, int iCol)
 {
-	return(vvTiles[iRow][iCol]);
+	return(vvTiles[iRow][iCol]->Get());
 }
 
 void DungeonLevel::Set(int iRow, int iCol, char cAvatar)
 {
-	vvTiles[iRow][iCol] = cAvatar;
+	vvTiles[iRow][iCol]->Set(cAvatar);
 }
 
 vector<DungeonLevel*> DungeonLevel::GetVSectors()
@@ -505,16 +569,14 @@ int DungeonLevel::GetEndColumn()
 	return(iEndColumn);
 }
 
-void DungeonLevel::GetUpStairs(int & iRow, int & iCol)
+Tile* DungeonLevel::GetUpStairs()
 {
-	iCol = iUpStairsX;
-	iRow = iUpStairsY;
+	return t_UpStairs;
 }
 
-void DungeonLevel::GetDownStairs(int & iRow, int & iCol)
+Tile* DungeonLevel::GetDownStairs()
 {
-	iCol = iDownStairsX;
-	iRow = iDownStairsY;
+	return t_DownStairs;
 }
 
 // Dump the dungeon level to console
@@ -528,10 +590,50 @@ void DungeonLevel::Display()
             itInner != (*it).end();
             itInner++ )
         {
-            cout << (*itInner);
+            cout << ((*itInner)->Get());
         }
 		
         // End of line as we just output a row
         cout << endl;
     }
+}
+
+//will return a 2d array of characters with only static tile chars, for use with ncurses
+vector<vector<char>> DungeonLevel::Dump()
+{
+	vector<vector<char>> vvChars; //2d vector of chars
+
+	vvChars.resize(iEndRow+1); //resizing height
+
+	for(auto it = vvChars.begin(); it != vvChars.end(); it++)
+		(*it).resize(iEndColumn+1); //resizing width
+
+	for(int y = iStartRow; y <= iEndRow; y++) //iterating thru y axis
+		for(int x = iStartColumn; x <= iEndColumn; x++) //thru x axis
+		{
+			vvChars[y][x] = vvTiles[y][x]->Get(); //setting the chars
+		}
+	return(vvChars);
+}
+
+//will return a tile object
+Tile* DungeonLevel::GetTileObj(int iRow, int iCol)
+{
+	return(vvTiles[iRow][iCol]);
+}
+
+vector<Creature*> DungeonLevel::GetVCreatures()
+{
+	return(vCreatures);
+}
+
+void DungeonLevel::KillCreature(Creature* c_Creature2)
+{
+	(c_Creature2->GetTile())->SetActor(NULL);
+
+	for(int i = 0; i < vCreatures.size(); i++)
+	{
+		if(vCreatures[i] == c_Creature2)
+			vCreatures.erase(vCreatures.begin() + i);
+	}
 }

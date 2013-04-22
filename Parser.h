@@ -30,4 +30,6 @@ bool outputXMLToConsole(std::vector<ptr> & vObjects);
 
 void requestInput(std::string & xmlFile, std::string mode);
 
+void runParser();
+
 #endif

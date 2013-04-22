@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <World>
 	<Item>
-		<name>silver key</name>
+		<name>Silver Key</name>
 		<properties>
 			<property>metal</property>
 			<property>silver</property>
@@ -14,20 +14,47 @@
 		<quantity>0</quantity>
 	</Item>
 
+    <Creature>
+        <name>Windows 98</name>
+        <properties>
+            <property>evil</property>
+            <property>robot</property>
+        </properties>
+        <displayChar>e</displayChar>
+        <level>2</level>
+        <hp>100</hp>
+        <maxHP>19</maxHP>
+        <graphic>./graphics/windows.txt</graphic>
+    </Creature>
+
 	<Creature>
-		<name>orc</name>
+		<name>Orc</name>
 		<properties>
 			<property>orcish</property>
 			<property>humanoid</property>
 		</properties>
 		<displayChar>o</displayChar>
 		<level>2</level>
-		<hp>0</hp>
+		<hp>100</hp>
 		<maxHP>15</maxHP>
+		<graphic>./graphics/orc.txt</graphic>
 	</Creature>
 
+    <Creature>
+        <name>Windows</name>
+        <properties>
+            <property>orcish</property>
+            <property>humanoid</property>
+        </properties>
+        <displayChar>o</displayChar>
+        <level>2</level>
+        <hp>100</hp>
+        <maxHP>15</maxHP>
+        <graphic>./graphics/orc.txt</graphic>
+    </Creature>
+
 	<Scroll>
-		<name>scroll of fireball</name>
+		<name>Scroll of Fireball</name>
 		<properties>
 			<property>paper</property>
 			<property>magical</property>
@@ -43,7 +70,7 @@
 	</Scroll>
 
 	<Weapon>
-		<name>longsword</name>
+		<name>Longsword</name>
 		<properties>
 			<property>metal</property>
 		</properties>
@@ -53,15 +80,33 @@
 		<rarity>10</rarity>
 		<enchantment>0</enchantment>
 		<quantity>0</quantity>
-		<damage>10</damage>
+		<damage>20</damage>
 		<type>sword</type>
 		<accuracy>2</accuracy>
 		<range>0</range>
 		<ammoType>default</ammoType>
 	</Weapon>
 
+    <Weapon>
+        <name>Dagger</name>
+        <properties>
+            <property>metal</property>
+        </properties>
+        <displayChar>~</displayChar>
+        <weight>20</weight>
+        <value>60</value>
+        <rarity>10</rarity>
+        <enchantment>0</enchantment>
+        <quantity>0</quantity>
+        <damage>10</damage>
+        <type>sword</type>
+        <accuracy>2</accuracy>
+        <range>0</range>
+        <ammoType>default</ammoType>
+    </Weapon>
+
 	<Armor>
-		<name>chainmail</name>
+		<name>Chainmail</name>
 		<properties>
 			<property>metal</property>
 		</properties>
@@ -75,5 +120,49 @@
 		<type>medium</type>
 		<armorValue>8</armorValue>
 	</Armor>
+	
+    <Armor>
+        <name>DragonScale</name>
+        <properties>
+            <property>metal</property>
+        </properties>
+        <displayChar>0</displayChar>
+        <weight>60</weight>
+        <value>80</value>
+        <rarity>10</rarity>
+        <enchantment>0</enchantment>
+        <quantity>0</quantity>
+        <slot>chest</slot>
+        <type>medium</type>
+        <armorValue>8</armorValue>
+    </Armor>
+
+    <Potion>
+        <name>Elixir</name>
+        <properties>
+        </properties>
+        <displayChar>?</displayChar>
+        <weight>1</weight>
+        <value>250</value>
+        <rarity>30</rarity>
+        <enchantment>0</enchantment>
+        <quantity>0</quantity>
+        <health>30</health>
+        <nutrition>0</nutrition>
+    </Potion>
+
+    <Potion>
+        <name>Potion</name>
+        <properties>
+        </properties>
+        <displayChar>?</displayChar>
+        <weight>1</weight>
+        <value>250</value>
+        <rarity>30</rarity>
+        <enchantment>0</enchantment>
+        <quantity>0</quantity>
+        <health>10</health>
+        <nutrition>0</nutrition>
+    </Potion>
 
 </World>

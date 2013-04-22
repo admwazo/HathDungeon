@@ -6,20 +6,24 @@
 #include <random>
 #include <ctime>
 
+#include "Tile.h"
+#include "Creature.h"
+
+class Tile;
+
 class DungeonLevel
 {
     private:
-        std::vector<std::vector<char>> vvTiles;
+        std::vector<std::vector<Tile*>> vvTiles;
     	std::vector<DungeonLevel*> vSectors;
-    	int iStartRow;
+    	std::vector<Creature*> vCreatures; 
+		int iStartRow;
     	int iEndRow;
     	int iStartColumn;
     	int iEndColumn;
     	int iNumTiles;
-    	int iDownStairsX;
-		int iDownStairsY;
-		int iUpStairsX;
-		int iUpStairsY;	
+    	Tile* t_DownStairs;
+		Tile* t_UpStairs;
 		//requirements
     	int iMinLength;	//minimum length of room (including wall tiles and invisible boundary) - set at 9
     	int iMinTiles;	//minimum number of tiles - set at 400
@@ -45,6 +49,7 @@ class DungeonLevel
 		virtual void RandomPos(int & iCol, int & iRow, DungeonLevel* dlSector);
         virtual int GetTiles();
         virtual void SetTiles(int i);
+		virtual Tile* GetTileObj(int iRow, int iCol);
         virtual char Get(int iRow, int iCol);
         virtual void Set(int iRow, int iCol, char cAvatar);
         virtual int GetWidth(int iRow);
@@ -53,9 +58,12 @@ class DungeonLevel
 		virtual int GetStartRow();
 		virtual int GetEndColumn();
 		virtual int GetStartColumn();
-		virtual void GetUpStairs(int & iRow, int & iCol);
-		virtual void GetDownStairs(int & iRow, int & iCol);
+		virtual Tile* GetUpStairs();
+		virtual Tile* GetDownStairs();
         virtual std::vector<DungeonLevel*> GetVSectors();
+		virtual std::vector<Creature*> GetVCreatures();
+		virtual std::vector<std::vector<char>> Dump();
+		virtual void KillCreature(Creature* c_Creature2);
 };
 
 #endif

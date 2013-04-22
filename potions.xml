@@ -1,0 +1,28 @@
+    <Potion>
+        <name>Elixir</name>
+        <properties>
+        </properties>
+        <displayChar>e</displayChar>
+        <weight>0</weight>
+        <value>0</value>
+        <rarity>10</rarity>
+        <enchantment>10</enchantment>
+        <quantity>1</quantity>
+        <health>10</health>
+        <nutrition>10</nutrition>
+    </Potion>
+
+    <Potion>
+        <name>Panacea</name>
+        <properties>
+        </properties>
+        <displayChar>p</displayChar>
+        <weight>0</weight>
+        <value>0</value>
+        <rarity>90</rarity>
+        <enchantment>10</enchantment>
+        <quantity>1</quantity>
+        <health>30</health>
+        <nutrition>10</nutrition>
+    </Potion>
+

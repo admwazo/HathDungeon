@@ -3,6 +3,9 @@
 #include <cstdlib>
 #include <ostream>
 #include "Creature.h"
+#include "Tile.h"
+#include "Item.h"
+#include "Weapon.h"
 
 using namespace std;
 
@@ -24,19 +27,9 @@ int Creature::getPosX()
 	return iPosX;
 }
 
-void Creature::setPosX(int x)
-{
-	iPosX = x;
-}
-
 int Creature::getPosY()
 {
 	return iPosY;
-}
-
-void Creature::setPosY(int y)
-{
-	iPosY = y;
 }
 
 int Creature::getLevel()
@@ -68,40 +61,94 @@ void Creature::setMaxHP(int iMaxHP)
 {
 	maxHP = iMaxHP;
 }
-/*
-void Creature::moveLeft()
+
+string Creature::getGraphic()
 {
-	iPosX--;
+	return sGraphic;
 }
 
-void Creature::moveRight()
+void Creature::setGraphic(string sGraphic2)
 {
-	iPosX++;
+	sGraphic = sGraphic2;
 }
 
-void Creature::moveUp()
+Tile* Creature::GetTile()
 {
-	iPosY--;
+	return(t_CurTile);
 }
 
-void Creature::moveDown()
+void Creature::SetTile(Tile* t_Tile)
 {
-	iPosY++;
-}
-*/
+	//clearing current tile's actor
+	if(t_CurTile != NULL)
+		t_CurTile->SetActor(NULL);
+	
+	t_CurTile = t_Tile;
+	iPosY = (t_CurTile->GetPosY());
+	iPosX = (t_CurTile->GetPosX());
 
-/*
-void setInventory(vector<Item*> inventory)
+	//setting NEW current tile's actor
+	t_CurTile->SetActor(this);
+}
+
+Item* Creature::GetItem(int iIndex)
 {
-
+	if((iIndex >= 0)&&(iIndex < vItems.size()))
+		return(vItems[iIndex]);
 }
 
-vector<Item*> getInventory()
+void Creature::RemoveItem(Item* i_Item)
 {
-	vector<Item*> inventory;
-	return inventory;
+    for(int i = 0; i < vItems.size(); i++)
+    {
+        if(vItems[i] == i_Item)
+            vItems.erase(vItems.begin() + i);
+    }
 }
-*/
+
+void Creature::AddItem(Item* i_Item2)
+{
+	Weapon* w_Weapon2 = dynamic_cast<Weapon*>(i_Item2);
+
+    if(w_Weapon2 != NULL)
+	{
+		SetWeapon(w_Weapon2);
+	}
+
+	vItems.push_back(i_Item2);
+}
+
+vector<string> Creature::GetInventory()
+{
+	vector<string> vTempItems;
+
+    if(vItems.size() != 0)
+    {
+        for(int i = 0; i < vItems.size(); i++)
+        {
+            vTempItems.push_back(vItems[i]->getName());
+        }
+    }
+
+    return(vTempItems);
+}
+
+Weapon* Creature::GetWeapon()
+{
+	return w_Weapon;
+}
+
+void Creature::SetWeapon(Weapon* w_Weapon2)
+{
+	w_Weapon = w_Weapon2;
+}
+
+void Creature::Drop(Item* i_Item)
+{
+    RemoveItem(i_Item);
+
+    GetTile()->AddItem(i_Item);
+}
 
 // dumps contents of objects to console. overridden in every derived class.
 void Creature::dumpObject()
@@ -160,6 +207,8 @@ void Creature::setElementData(string sElementName, string sContent)
 		setHP(atoi(sContent.c_str()));
 	else if (sElementName == "maxHP")
 		setMaxHP(atoi(sContent.c_str()));
+	else if (sElementName == "graphic")
+		setGraphic(sContent);
 	//else if (sElementName == "inventory")
 	//	setInventory(atoi(sContent.c_str()));
 }

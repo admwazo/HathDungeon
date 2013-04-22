@@ -1,0 +1,21 @@
+CURRENT ISSUE:
+
+
+need to change the messagebox so that it displays messages on a new line,
+and changes height for different lines
+
+also display a more verbose victory image
+
+also implement armor
+
+also implement gold
+
+add more monsters
+
+change the probability
+
+
+Things to ask about::
+******************************
+
+drop weapon code in Game::Pickup

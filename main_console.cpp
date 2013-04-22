@@ -13,13 +13,10 @@
 
 using namespace std;
 
-typedef XMLSerializable* ptr;
-
-void runParser(); //prototype for runParser since it's defined in main.cpp
-
 int main()
 {
-	//runParser(); //runs the xml-parser
 	Game g;
 	g.Play();
+	
+//	cout << "HathDungeon hath claimed another soul..." << endl;
 }
