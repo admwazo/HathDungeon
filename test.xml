@@ -20,7 +20,7 @@
             <property>evil</property>
             <property>robot</property>
         </properties>
-        <displayChar>e</displayChar>
+        <displayChar>w</displayChar>
         <level>2</level>
         <hp>100</hp>
         <maxHP>19</maxHP>
@@ -41,18 +41,44 @@
 	</Creature>
 
     <Creature>
-        <name>Windows</name>
+        <name>Aardvark</name>
+        <properties>
+            <property>wierd</property>
+            <property>animal</property>
+        </properties>
+        <displayChar>a</displayChar>
+        <level>2</level>
+        <hp>100</hp>
+        <maxHP>15</maxHP>
+        <graphic>./graphics/aardvark.txt</graphic>
+    </Creature>
+
+    <Creature>
+        <name>Kenny</name>
+        <properties>
+            <property>accident</property>
+            <property>prone</property>
+        </properties>
+        <displayChar>k</displayChar>
+        <level>2</level>
+        <hp>100</hp>
+        <maxHP>15</maxHP>
+        <graphic>./graphics/kenny.txt</graphic>
+    </Creature>
+
+    <Creature>
+        <name>Feral Cher</name>
         <properties>
             <property>orcish</property>
             <property>humanoid</property>
         </properties>
-        <displayChar>o</displayChar>
+        <displayChar>c</displayChar>
         <level>2</level>
         <hp>100</hp>
         <maxHP>15</maxHP>
-        <graphic>./graphics/orc.txt</graphic>
+        <graphic>./graphics/cher.txt</graphic>
     </Creature>
-
+	
 	<Scroll>
 		<name>Scroll of Fireball</name>
 		<properties>

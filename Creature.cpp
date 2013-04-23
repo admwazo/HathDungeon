@@ -6,6 +6,7 @@
 #include "Tile.h"
 #include "Item.h"
 #include "Weapon.h"
+#include "Armor.h"
 
 using namespace std;
 
@@ -115,10 +116,15 @@ void Creature::RemoveItem(Item* i_Item)
 void Creature::AddItem(Item* i_Item2)
 {
 	Weapon* w_Weapon2 = dynamic_cast<Weapon*>(i_Item2);
+	Armor* a_Armor2 = dynamic_cast<Armor*>(i_Item2);
 
     if(w_Weapon2 != NULL)
 	{
 		SetWeapon(w_Weapon2);
+	}
+	if(a_Armor2 != NULL)
+	{
+		SetArmor(a_Armor2);
 	}
 
 	vItems.push_back(i_Item2);
@@ -147,6 +153,16 @@ Weapon* Creature::GetWeapon()
 void Creature::SetWeapon(Weapon* w_Weapon2)
 {
 	w_Weapon = w_Weapon2;
+}
+
+Armor* Creature::GetArmor()
+{
+    return a_Armor;
+}
+
+void Creature::SetArmor(Armor* a_Armor2)
+{
+    a_Armor = a_Armor2;
 }
 
 void Creature::Drop(Item* i_Item)

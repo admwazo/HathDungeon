@@ -637,3 +637,13 @@ void DungeonLevel::KillCreature(Creature* c_Creature2)
 			vCreatures.erase(vCreatures.begin() + i);
 	}
 }
+
+void DungeonLevel::SetLevel(int iLevel2)
+{
+	iLevel = iLevel2;
+}
+
+int DungeonLevel::GetLevel()
+{
+	return iLevel;
+}

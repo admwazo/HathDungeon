@@ -28,6 +28,7 @@ class Game
 		std::stringstream ssBorder;
 		std::stringstream ssMessageBox;
 		std::stringstream buffer_fight;
+		std::stringstream buffer_intro;
 	public:
 		Game();
 		~Game();

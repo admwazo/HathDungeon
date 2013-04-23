@@ -7,6 +7,7 @@
 #include <fstream>
 #include <cstdlib>
 
+#include "Armor.h"
 #include "Weapon.h"
 #include "Game.h"
 #include "DungeonLevel.h"
@@ -26,8 +27,11 @@ Game::Game()
 	iMoves = 0;
 	
 	initscr();
+	start_color();
 	keypad(stdscr, TRUE);
 	int raw(void);
+	init_pair(1, COLOR_BLACK, COLOR_GREEN);
+	init_pair(2, COLOR_BLACK, COLOR_RED);
 	
 	//setting ssBorder
     string sBorder = "==============================================================================";
@@ -42,6 +46,10 @@ Game::Game()
     ifstream stream_fight("./graphics/fight.txt");
     buffer_fight << stream_fight.rdbuf();	
 	
+	//setting intro
+    ifstream stream_intro("./graphics/dungeon.txt");
+    buffer_intro << stream_intro.rdbuf();
+
 	DownLevel();
 }
 
@@ -110,6 +118,10 @@ void Game::Drop()
             getch();
             return;
         }
+		if(p_Player->GetIActive() == p_Player->GetArmor())
+		{
+			p_Player->SetArmor(NULL);
+		}
         p_Player->Drop(p_Player->GetIActive());
         p_Player->SetIActive(0);
     }
@@ -202,8 +214,8 @@ bool Game::Attack(Creature* c_Creature)
     	
 		//status
 		stringstream ssStatus;
-		ssStatus << "|| GAME STATUS ||  Level: " << iCurLevel << " || Health: " << p_Player->getHP() <<  " || XP: " <<
-            p_Player->GetXP() << " || " << endl;
+		ssStatus << "{ GAME STATUS } Level: " << iCurLevel << " || Health: " << p_Player->getHP() <<  " || XP: " <<
+            p_Player->GetXP() << " || Evolution: " << p_Player->getLevel() << endl;
 		move(20,0);
 		addstr(ssStatus.str().c_str());
 
@@ -217,13 +229,24 @@ bool Game::Attack(Creature* c_Creature)
 			}
 		if(reply == 'a')
 			{
+				//increasing players experience points and checking for a level up
  		        p_Player->SetXP(p_Player->GetXP() + c_Creature->getLevel());
-	
+				if(p_Player->GetXP() > ((p_Player->getLevel() + 1) * 3))
+				{
+					p_Player->SetXP(0);
+					p_Player->LevelUp();
+					Display("Congratulations, you evolved!");
+					sleep(1);
+				}
 				Weapon* w_CreWeapon = c_Creature->GetWeapon();
 				Weapon* w_PlaWeapon = p_Player->GetWeapon();
-
+				Armor* a_PlaArmor = p_Player->GetArmor();
+				//dealing damage
 				c_Creature->setHP((c_Creature->getHP()) - ((w_PlaWeapon->getDamage() * 2 )));
-				p_Player->setHP((p_Player->getHP()) - (w_CreWeapon->getDamage()));
+				if(a_PlaArmor != NULL)
+					p_Player->setHP((p_Player->getHP()) - (w_CreWeapon->getDamage() - a_PlaArmor->getArmorValue()));
+				else
+                    p_Player->setHP((p_Player->getHP()) - (w_CreWeapon->getDamage()));
 
                 if(p_Player->getHP() < 0)
                 {
@@ -283,11 +306,17 @@ void Game::Pickup()
 		Item* i_Item = t_CurTile->GetItem(y);
 		if(i_Item != NULL)
 		{
-			//casting as weapon
+			//casting as weapon/armor
+			Armor* a_Temp = dynamic_cast<Armor*>(i_Item);
 			Weapon* w_Temp = dynamic_cast<Weapon*>(i_Item);
 			if(w_Temp != NULL)
 			{
 				p_Player->Drop(p_Player->GetWeapon());
+			}
+			if(a_Temp != NULL)
+			{
+				if(p_Player->GetArmor() != NULL)
+					p_Player->Drop(p_Player->GetArmor());
 			}
 			//adding the item either way, because it's valid
             p_Player->AddItem(i_Item);  //giving the player the item pointer
@@ -308,6 +337,19 @@ void Game::Pickup()
 
 bool Game::Play()
 {
+	clear();
+	move(0,0);
+	addstr(buffer_intro.str().c_str());
+	move(7,19);
+	string sIntro = "{...Press any key...}";
+	attron(COLOR_PAIR(1));
+	attron(A_BOLD);
+	addstr(sIntro.c_str());
+	attroff(COLOR_PAIR(1));
+	attroff(A_BOLD);
+	refresh();
+	getch();
+
 	Display("What is your warriors name: ");
 	move(12,40);
 	char str[80];
@@ -398,8 +440,8 @@ void Game::Display(string sInGameMsg)
 
 	//adding status
 	stringstream ssStatus;
-	ssStatus << "|| GAME STATUS ||  Level: " << iCurLevel << " || Health: " << p_Player->getHP() <<  " || XP: " <<
-        p_Player->GetXP() << "             (q) to quit";
+	ssStatus << "{ GAME STATUS } Level: " << iCurLevel << " || Health: " << p_Player->getHP() <<  " || XP: " <<
+        p_Player->GetXP() << " || Evolution: " << p_Player->getLevel() << " || (q) to quit";
 	move(22,0);
 	addstr(ssStatus.str().c_str());
 
@@ -482,7 +524,7 @@ void Game::DownLevel()
 	}
 
 	iCurLevel++; //incrementing current level counter
-
+	dlLevel->SetLevel(iCurLevel);
 	p_Player->SetTile(dlLevel->GetUpStairs());
 }
 
@@ -519,8 +561,9 @@ void Game::Help()
 		 << '\t' << '\t' << "right key  - Move Player Right " << endl
 	 	 << '\t' << '\t' << "Numbers    - Cycle through items in inventory " << endl
 		 << '\t' << '\t' << "p          - Pickup Item " << endl
-		 << '\t' << '\t' << "u          - Use Item " << endl << endl
-	
+		 << '\t' << '\t' << "u          - Use Current Item " << endl
+		 << '\t' << '\t' << "d			- Drop Current Item " << endl
+		 << '\t' << '\t' << "k			- AutoKill (cheat) " << endl << endl
 		 << "Press any key to return to the game: " << endl;
 	move(0,0);
 	addstr(ssHelp.str().c_str());

@@ -11,6 +11,7 @@
 class Item;
 class Tile;
 class Weapon;
+class Armor;
 
 class Creature : public Entity
 {
@@ -35,6 +36,8 @@ public:
     virtual std::vector<std::string> GetInventory();
 	virtual Weapon* GetWeapon();
 	virtual void SetWeapon(Weapon* w_Weapon2);
+	virtual Armor* GetArmor();
+	virtual void SetArmor(Armor* a_Armor2);
 	virtual void Drop(Item* i_Item);
 	
 	// overridden from XMLSerializable
@@ -55,6 +58,7 @@ private:
 	std::string sGraphic; //contains the file location of the avatar graphic
 	int iVectorPos;  //contains the position of the creature within dlLevel's creature vector
 	Weapon* w_Weapon;
+	Armor* a_Armor;
 };
 
 // End of the include guard:

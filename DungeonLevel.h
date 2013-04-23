@@ -14,7 +14,8 @@ class Tile;
 class DungeonLevel
 {
     private:
-        std::vector<std::vector<Tile*>> vvTiles;
+    	int iLevel;
+	    std::vector<std::vector<Tile*>> vvTiles;
     	std::vector<DungeonLevel*> vSectors;
     	std::vector<Creature*> vCreatures; 
 		int iStartRow;
@@ -64,6 +65,8 @@ class DungeonLevel
 		virtual std::vector<Creature*> GetVCreatures();
 		virtual std::vector<std::vector<char>> Dump();
 		virtual void KillCreature(Creature* c_Creature2);
+		virtual int GetLevel();
+		virtual void SetLevel(int iLevel2);
 };
 
 #endif
