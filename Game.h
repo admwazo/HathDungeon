@@ -40,6 +40,7 @@ class Game
 		virtual void Pickup();
 		virtual void Help();
 		virtual void DriveCreatures();
+		virtual void Drop();
 		virtual bool Attack(Creature* c_Creature); 
 };
 

@@ -99,7 +99,13 @@ Item* Creature::GetItem(int iIndex)
 
 void Creature::RemoveItem(Item* i_Item)
 {
-    for(int i = 0; i < vItems.size(); i++)
+	if(vItems.size() == 1)
+	{
+		vItems.clear();
+		vector<Item*>(vItems).swap(vItems);
+		return;
+	}    
+	for(int i = 0; i < vItems.size(); i++)
     {
         if(vItems[i] == i_Item)
             vItems.erase(vItems.begin() + i);

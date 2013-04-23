@@ -95,9 +95,29 @@ bool Game::Turn()
 	else if(input == 'u')
 		p_Player->Use(p_Player->GetIActive());
 	else if(input == 'd')
-		p_Player->Drop(p_Player->GetIActive());
-
+		Drop();
+	
 	return true;
+}
+
+void Game::Drop()
+{
+	if(p_Player->GetItem(1) != NULL)
+    {
+    	if(p_Player->GetIActive() == p_Player->GetWeapon())
+        {
+        	Display("Can't drop your weapon!...Press any key to continue");
+            getch();
+            return;
+        }
+        p_Player->Drop(p_Player->GetIActive());
+        p_Player->SetIActive(0);
+    }
+    else
+    {
+     	Display("Can't drop your last item!...Press any key to continue");
+        getch();
+	}
 }
 
 void Game::DriveCreatures()
@@ -193,14 +213,6 @@ bool Game::Attack(Creature* c_Creature)
 		if(reply == 'k')
 			{
                     dlLevel->KillCreature(c_Creature);
-                    move(11,0);
-                    addstr(ssMessageBox.str().c_str());
-
-                    move(12,35);
-                    string sVictory = "Victory!!!";
-                    addstr(sVictory.c_str());
-                    refresh();
-                    sleep(1);
                     break;
 			}
 		if(reply == 'a')
@@ -279,6 +291,7 @@ void Game::Pickup()
 			}
 			//adding the item either way, because it's valid
             p_Player->AddItem(i_Item);  //giving the player the item pointer
+			p_Player->SetIActive(p_Player->GetInventory().size() - 1);
 		}
 		else
 		{
@@ -497,7 +510,7 @@ void Game::Help()
 	
 	ssHelp << "HathDungeon Help: " << endl << endl
 
-	<< "iActive is [" << (p_Player->GetIActive())->getName() << "] and cWeapon is [" << (p_Player->GetWeapon())->getName() << "]" << endl << endl
+	<< "Active item is [" << (p_Player->GetIActive())->getName() << "] and Weapon is [" << (p_Player->GetWeapon())->getName() << "]" << endl << endl
 
 		 << '\t' << "Controls: " << endl
 		 << '\t' << '\t' << "up key     - Move Player Up " << endl

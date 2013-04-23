@@ -56,11 +56,12 @@ void Player::Use(Item* i_Item)
 
 void Player::Drop(Item* i_Item)
 {
-    this->RemoveItem(i_Item);
+    RemoveItem(i_Item);
 
-	this->GetTile()->AddItem(i_Item);
-
-	i_Active = GetItem(0);
+	GetTile()->AddItem(i_Item);
+	
+	if(GetInventory().size() > 0)
+		SetIActive(0);
 }
 
 void Player::LevelUp()
