@@ -55,7 +55,10 @@ Game::Game()
 
 Game::~Game()
 {
-	Display("HathDungeon hath claimed another soul...");
+	stringstream ssEnd;
+	ssEnd << "HathDungeon hath claimed another soul... Your score was: " << p_Player->getLevel();
+
+	Display(ssEnd.str().c_str());
 	sleep(1);
 	endwin();
 }
@@ -357,6 +360,9 @@ bool Game::Play()
 	stringstream ss;
 	ss << str;
 	p_Player->setName(ss.str());
+
+	Display("");
+
 	while(Turn() && (p_Player->getHP() > 0))
 	{
 		if(iMoves > 15)
@@ -392,24 +398,18 @@ void Game::Display(string sInGameMsg)
 		ssInventory << vInventory[i];
 	}
 
+	//displaying inventory
 	move(0,0);
 	addstr(ssInventory.str().c_str());
 
+	//displaying active item
 	move(0,iDone);
 	attron(A_BOLD);
 	addstr(i_Active->getName().c_str());
 	attroff(A_BOLD);
 
-	//getting the char vector
+	//displaying the char vector
 	vector<vector<char>> vvChars = dlLevel->Dump();
-
-	//setting the monsters
-	vector<Creature*> vCreatures = dlLevel->GetVCreatures();
-	for(int i = 0; i < vCreatures.size(); i++)
-		vvChars[vCreatures[i]->getPosY()][vCreatures[i]->getPosX()] = vCreatures[i]->getDisplayChar();
-	
-	//setting the player
-	vvChars[p_Player->getPosY()][p_Player->getPosX()] = cPlayer;
 
     for(size_t x = 0; x <= dlLevel->GetEndColumn(); x++)
     {
@@ -420,6 +420,22 @@ void Game::Display(string sInGameMsg)
         }
     }
 
+	//displaying the player
+	move(p_Player->getPosY()+1,p_Player->getPosX()+1);
+	attron(COLOR_PAIR(1));
+	addch(cPlayer);
+	attroff(COLOR_PAIR(1));
+
+	//displaying the monsters
+    vector<Creature*> vCreatures = dlLevel->GetVCreatures();
+    for(int i = 0; i < vCreatures.size(); i++)
+    {
+		move(vCreatures[i]->getPosY()+1,vCreatures[i]->getPosX()+1);
+		attron(COLOR_PAIR(2));
+		addch(vCreatures[i]->getDisplayChar());
+		attroff(COLOR_PAIR(2));
+	}
+	
 	//displaying the ingame messagebox
 	if(sInGameMsg != "")
 	{
