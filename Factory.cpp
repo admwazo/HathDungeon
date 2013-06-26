@@ -100,32 +100,6 @@ Creature* Factory::GenerateCreature(int iMaxLevel)
     return NULL;
 }
 
-/*
-Item* Factory::GenerateItem()
-{
-	vector<Item*> vProperItems;
-
-	for(auto it = vItems.begin();
-		it != vItems.end();
-		it++)
-	{
-		//need something here to validate proper item
-		vProperItems.push_back(*it);
-	}
-
-	if(vProperItems.size() != 0)
-	{
-		int iIndex = (mtRandom() % vProperItems.size());
-		Item* i_Item = vProperItems[iIndex];
-
-		Item* pReturnValue = new Item(*i_Item);
-		return pReturnValue;
-	}
-
-	return NULL;
-}
-*/
-
 Item* Factory::GenerateItem()
 {
 	int iIndex = (mtRandom() % vItems.size());

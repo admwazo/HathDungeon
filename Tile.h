@@ -32,8 +32,8 @@ class Tile
 		virtual std::vector<std::string> GetInventory();
 		virtual void SetActor(Creature* c_Actor2);
 		virtual Creature* GetActor();
-		virtual bool IsGoodP();
-		virtual bool IsGoodE();
+		virtual bool IsGoodP();		//just returns bPlayer
+		virtual bool IsGoodE();		//just returns bElse
 };
 
 #endif
