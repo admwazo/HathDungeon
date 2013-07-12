@@ -1,3 +1,12 @@
+Screenshots
+===========
+
+![](https://github.com/admwazo/HathDungeon/blob/master/graphics/home.png?raw=true)
+
+![](https://github.com/admwazo/HathDungeon/blob/master/graphics/map.png?raw=true)
+
+![](https://github.com/admwazo/HathDungeon/blob/master/graphics/battle.png?raw=true)
+
 HathDungeon
 ===========
 
@@ -16,13 +25,3 @@ Getting Started
 
 1. Run 'make'
 2. Run './game'
-
-Screenshots
-===========
-
-![](https://github.com/admwazo/HathDungeon/blob/master/graphics/home.png?raw=true)
-
-![](https://github.com/admwazo/HathDungeon/blob/master/graphics/map.png?raw=true)
-
-![](https://github.com/admwazo/HathDungeon/blob/master/graphics/battle.png?raw=true)
-
