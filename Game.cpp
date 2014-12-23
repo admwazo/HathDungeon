@@ -6,7 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
-
+#include <unistd.h>
 #include "Armor.h"
 #include "Weapon.h"
 #include "Game.h"
